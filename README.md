@@ -1,8 +1,8 @@
-> *[한국어](README_KOR.md)*
+> *[한국어_README](README_KOR.md)*
 
 # Performance Comparison of Virtual Threads and WebFlux
 
-This project provides a test environment to compare the performance of Java 21+ Virtual Threads and Spring WebFlux. Both approaches can handle I/O operations asynchronously, but they differ in implementation methods and characteristics.
+This project provides a test environment to compare the performance of Java 21+ Virtual Threads and Spring WebFlux.
 
 ## Overview
 
@@ -18,7 +18,7 @@ All components run as Docker containers, and performance is measured using k6 lo
 
 ### Requirements
 
-- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) 
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) 
 
 ### How to Run Tests
 

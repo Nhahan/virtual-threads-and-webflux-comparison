@@ -1,8 +1,8 @@
-> *[ENGLISH](README.md)*
+> *[ENGLISH_README](README.md)*
 
 # 가상 스레드(Virtual Threads)와 웹플럭스(WebFlux) 성능 비교
 
-이 프로젝트는 Java 21+ 가상 스레드와 Spring WebFlux의 성능을 비교하기 위한 테스트 환경을 제공합니다. 두 방식 모두 비동기적으로 I/O 작업을 처리할 수 있지만, 구현 방식과 특성이 다릅니다.
+이 프로젝트는 Java 21+ 가상 스레드와 Spring WebFlux의 성능을 비교하기 위한 테스트 환경을 제공합니다.
 
 ## 개요
 
@@ -18,7 +18,7 @@
 
 ### 요구 사항
 
-- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) 
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) 
 
 ### 테스트 실행 방법
 
