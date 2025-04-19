@@ -1,0 +1,28 @@
+server:
+  port: 8082 # Different port for WebFlux gateway
+
+spring:
+  application:
+    name: webflux-gateway
+  # No thread configuration needed, uses WebFlux/Netty event loop by default
+  cloud:
+    gateway:
+      routes:
+        - id: backend-route-wf
+          uri: http://localhost:8080 # Backend service address
+          predicates:
+            - Path=/backend/** # Match requests to /backend/...
+          filters:
+            - StripPrefix=1 # Remove /backend before forwarding
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE # More detailed gateway logging if needed
+    com.example.webfluxgateway: INFO
+    reactor.netty.http.server: INFO # Keep Netty logs concise unless debugging
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health 

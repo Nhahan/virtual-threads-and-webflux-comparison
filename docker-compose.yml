@@ -1,0 +1,138 @@
+services:
+  # 가상 스레드 게이트웨이용 백엔드 서비스
+  vt-backend-service:
+    build:
+      context: .
+      dockerfile: backend-service/Dockerfile
+    container_name: vt-backend-service
+    ports:
+      - "8085:8080"
+    tmpfs:
+      - /tmp:exec,size=512M
+      - /app/logs:size=128M
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # 웹플럭스 게이트웨이용 백엔드 서비스
+  wf-backend-service:
+    build:
+      context: .
+      dockerfile: backend-service/Dockerfile
+    container_name: wf-backend-service
+    ports:
+      - "8086:8080"
+    tmpfs:
+      - /tmp:exec,size=512M
+      - /app/logs:size=128M
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  virtual-threads-gateway:
+    build:
+      context: .
+      dockerfile: virtual-threads-gateway/Dockerfile
+    container_name: virtual-threads-gateway
+    ports:
+      - "8081:8081"
+    tmpfs:
+      - /tmp:exec,size=512M
+      - /app/logs:size=128M
+    depends_on:
+      - vt-backend-service
+    environment:
+      # 가상 스레드 게이트웨이 전용 백엔드 서비스 사용
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://vt-backend-service:8080
+      - 'SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES=Path=/backend/**'
+      - 'SPRING_CLOUD_GATEWAY_ROUTES_0_FILTERS=StripPrefix=1'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8081/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  webflux-gateway:
+    build:
+      context: .
+      dockerfile: webflux-gateway/Dockerfile
+    container_name: webflux-gateway
+    ports:
+      - "8082:8082"
+    tmpfs:
+      - /tmp:exec,size=512M
+      - /app/logs:size=128M
+    depends_on:
+      - wf-backend-service
+    environment:
+      # 웹플럭스 게이트웨이 전용 백엔드 서비스 사용
+      - SPRING_CLOUD_GATEWAY_ROUTES_0_URI=http://wf-backend-service:8080
+      - 'SPRING_CLOUD_GATEWAY_ROUTES_0_PREDICATES=Path=/backend/**'
+      - 'SPRING_CLOUD_GATEWAY_ROUTES_0_FILTERS=StripPrefix=1'
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8082/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  reporter:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile.reporter
+    container_name: k6-reporter
+    tmpfs:
+      - /tmp:exec,size=512M
+    depends_on:
+      - virtual-threads-gateway
+      - webflux-gateway
+      - vt-backend-service
+      - wf-backend-service
+    volumes:
+      # 호스트 머신의 results 디렉토리를 컨테이너의 /scripts/results에 마운트
+      - ./results:/scripts/results
+    restart: no
+    # The entrypoint script handles running tests and generating the report 

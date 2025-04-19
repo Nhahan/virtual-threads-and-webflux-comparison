@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backend-service
+
+logging:
+  level:
+    com.example.backendservice: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health 

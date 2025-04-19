@@ -1,0 +1,30 @@
+server:
+  port: 8081 # Different port for VT gateway
+
+spring:
+  application:
+    name: virtual-threads-gateway
+  threads:
+    virtual:
+      enabled: true # Enable Virtual Threads
+  cloud:
+    gateway:
+      routes:
+        - id: backend-route-vt
+          uri: http://localhost:8080 # Backend service address
+          predicates:
+            - Path=/backend/** # Match requests to /backend/...
+          filters:
+            - StripPrefix=1 # Remove /backend before forwarding
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE # More detailed gateway logging if needed
+    com.example.virtualthreadsgateway: INFO
+    reactor.netty.http.server: INFO # Keep Netty logs concise unless debugging
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health 

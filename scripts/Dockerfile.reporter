@@ -1,0 +1,38 @@
+# Use a Python image
+FROM python:3.9-slim
+
+# Install k6 repository key and add repository
+ENV K6_VERSION=0.43.1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 필수 패키지만 설치
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    iputils-ping \
+    bc \
+    sed \
+    grep \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install k6
+RUN curl -L https://github.com/grafana/k6/releases/download/v${K6_VERSION}/k6-v${K6_VERSION}-linux-amd64.tar.gz -o /tmp/k6.tar.gz \
+    && tar -xzf /tmp/k6.tar.gz -C /tmp \
+    && mv /tmp/k6-v${K6_VERSION}-linux-amd64/k6 /usr/local/bin/k6 \
+    && chmod +x /usr/local/bin/k6 \
+    && rm -rf /tmp/k6*
+
+# Create scripts directory and set as working directory
+RUN mkdir -p /scripts/results
+WORKDIR /scripts
+
+# Copy needed files
+COPY scripts/test.js /scripts/
+COPY scripts/entrypoint.sh /scripts/
+
+# Make entrypoint executable
+RUN chmod +x /scripts/entrypoint.sh
+
+# Set entrypoint
+ENTRYPOINT ["/scripts/entrypoint.sh"] 
