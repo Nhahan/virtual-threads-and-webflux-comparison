@@ -46,6 +46,8 @@ After the test completes, the result is created in the `results` directory:
 
 See the chart below for a visual comparison of key time-based performance metrics (response time, wait time in milliseconds) between the Virtual Threads and WebFlux implementations based on k6 test results:
 
+![image](https://github.com/user-attachments/assets/9493effe-a934-4031-a31c-188794d90cfb)
+
 [View Performance Comparison Chart (Time in ms)](https://image-charts.com/chart?cht=bvg&chs=700x400&chd=t:986.75,1808.11,934.81,1758.40|903.57,1635.26,855.28,1596.66&chds=0,1900&chxt=x,y&chxl=0:|Avg+Resp|P95+Resp|Avg+Wait|P95+Wait&chco=4D89F9,00AEEF&chdl=Virtual+Threads|WebFlux&chdlp=b&chtt=Performance+Comparison+(Time+in+ms)&chma=0,0,0,20&chbh=a)
 
 *Note: This chart focuses on time-based metrics (milliseconds). Throughput metrics like Requests Per Second are not included due to scale differences.*
