@@ -46,6 +46,8 @@
 
 아래 차트는 k6 테스트 결과를 기반으로 가상 스레드와 웹플럭스 구현 간의 주요 시간 기반 성능 지표(응답 시간, 대기 시간(밀리초))의 시각적 비교를 보여줍니다:
 
+![image](https://github.com/user-attachments/assets/9493effe-a934-4031-a31c-188794d90cfb)
+
 [성능 비교 차트 보기 (시간 단위: ms)](https://image-charts.com/chart?cht=bvg&chs=700x400&chd=t:986.75,1808.11,934.81,1758.40|903.57,1635.26,855.28,1596.66&chds=0,1900&chxt=x,y&chxl=0:|Avg+Resp|P95+Resp|Avg+Wait|P95+Wait&chco=4D89F9,00AEEF&chdl=Virtual+Threads|WebFlux&chdlp=b&chtt=Performance+Comparison+(Time+in+ms)&chma=0,0,0,20&chbh=a)
 
 *참고: 이 차트는 시간 기반 지표(밀리초)에 중점을 둡니다. 초당 요청 수와 같은 처리량 지표는 스케일 차이로 인해 포함되지 않았습니다.*
